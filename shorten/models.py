@@ -10,15 +10,15 @@ class Encurtador(models.Model):
         related_name='urls'
     )
     url_redirect = models.URLField(max_length=500)
-    url_hash = models.CharField(max_length=80, unique=True, default='')
+    slug = models.SlugField(max_length=80, unique=True, default='')
     count_redirects = models.PositiveIntegerField(default=0)
 
     def save(self, *args, **kwargs):
-        self.url_hash = self.get_hash()
+        self.slug = self.get_hash()
         super(Encurtador, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.url_hash
+        return self.slug
 
     def get_hash(self):
         tokens = string.ascii_lowercase+string.ascii_uppercase+string.digits
@@ -27,7 +27,7 @@ class Encurtador(models.Model):
 
         _hash += _hash.join(random.choice(tokens) for y in range(max_char))
 
-        while Encurtador.objects.filter(url_hash=_hash):
+        while Encurtador.objects.filter(slug=_hash):
             _hash += ''.join(random.choice(tokens) for y in range(max_char))
 
         return _hash

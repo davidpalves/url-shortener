@@ -1,16 +1,35 @@
 {% extends "base.html" %}
+
 {% load staticfiles %}
+
+{% load widget_tweaks %}
+
 
 {% block content %}
 
     <div class="page-header text-center">
-        <h1>Short your URL here.</h1>
+        <h1>Simple is elegant!</h1>
     </div>
+    
     <form method="post" class="text-center">
         {% csrf_token %}
+    
+        {% for field in form %}
+        <div class="form-group">
 
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Get Shortened URL!</button>
+            <h4>{{ field.label_tag }}</h4>
+
+            {% render_field field class="form-control" placeholder="http://url-to-be-shortened.com" %}
+
+            {% if field.help_text %}
+            <small class="form-text text-muted">
+                {{ field.help_text }}
+            </small>
+            {% endif %}
+        </div>
+        {% endfor %}
+    
+        <button type="submit" class="btn btn-success">Shorten it!</button>
     </form>
 
     {% block extrajs %}

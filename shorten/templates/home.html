@@ -2,11 +2,10 @@
 
 {% block content%}
         <h1>URL Shortener</h1>
-        <h4>Your URLs</h4>
+        <h4>Here's your URLs, {{ user.first_name }}</h4>
         <table class="table">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>URL</th>
                 <th>Shortened URL</th>
             </tr>
@@ -14,12 +13,51 @@
         <tbody>
             {% for url in urls %}
                 <tr>
-                    <th scope="row">{{ url.id }}</th>
                     <td><a href="{{ url.url_redirect }}" target="_blank">{{ url.url_redirect }}</a></td>
-                    <td><a href="#">{{ request.build_absolute_uri }}{{ url.url_hash }}</a></td>
+                    <td>
+                        <input class="form-control col-sm-6" type="text" value="http://{{ request.get_host }}/{{ url.slug }}" id="copyInput-{{url.id}}" readonly>
+                        <button id="{{ url.id }}" class="btn info-btn" onclick="copyLink(this.id)"><i class="fa fa-clipboard"></i></button>
+                        <a class="btn info-btn" href="http://{{ request.get_host }}/{{ url.slug }}" target="_blank"><i class="fa fa-external-link"></i></a>
+                    </td>
                  </tr>
             {% endfor %}
         </tbody>
         </table>
+
+        <div class="row justify-content-center">
+                {% include 'includes/pagination.html' %}
+        </div>
         
-{% endblock %}
+    {% endblock %}
+
+    {% block toast %}
+        <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 0px;">
+            <div class="toast" style="position: absolute; top: 20px; right: 30px;">
+                <div class="toast-body">
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    Link copied!
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+
+{% block extrajs %}
+    <script type="text/javascript">
+        function copyLink(clicked_id) {
+            var copyText = document.getElementById("copyInput-" + clicked_id);
+
+            copyText.select();
+
+            document.execCommand("copy");
+            
+            $('.toast').toast({
+                delay: 1500
+            });
+
+            $('.toast').toast('show')
+        }
+    </script>
+{% endblock%}

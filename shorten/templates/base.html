@@ -34,14 +34,23 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarText">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'home' %}">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'new_url' %}">URL Shortener</a>
-                </li>
-            </ul>
+            {% if user.is_authenticated %}
+
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'list_urls' %}">Your shortened URLs</a>
+                    </li>
+                </ul>
+            {% else %}
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'signup' %}">Register</a>
+                    </li>
+                </ul>
+            {% endif %}
             <span class="navbar-text">
                 {% if user.is_authenticated %}
                     <a href="{% url 'logout' %}">Logout</a>
@@ -52,10 +61,14 @@
         </div>
         </nav>
 
+        {% block toast %}
+        {% endblock %}
+        
         <div class="container">
             {% block content %}
             {% endblock %}
         </div>
+
 
         <!-- Bootstrap core JavaScript -->
         <!-- Placed at the end of the document so the pages load faster -->

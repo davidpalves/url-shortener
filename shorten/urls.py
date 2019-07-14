@@ -1,7 +1,8 @@
 from django.urls import path
-from shorten.views import EncurtadorListView, EncurtadorCreateView
+from shorten.views import EncurtadorListView, EncurtadorCreateView, EncurtadorDetailView
 
 urlpatterns = [
-    path('shorten/', EncurtadorCreateView.as_view(), name='new_url'),
-    path('', EncurtadorListView.as_view(), name='home'),
+    path('urls/', EncurtadorListView.as_view(), name='list_urls'),
+    path('<slug:slug>/', EncurtadorDetailView.as_view(), name='redirect'),
+    path('', EncurtadorCreateView.as_view(), name='home'),
 ]
