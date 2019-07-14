@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content%}
+        <h1>URL Shortener</h1>
+        <h4>Your URLs</h4>
+        <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>URL</th>
+                <th>Shortened URL</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for url in urls %}
+                <tr>
+                    <th scope="row">{{ url.id }}</th>
+                    <td><a href="{{ url.url_redirect }}" target="_blank">{{ url.url_redirect }}</a></td>
+                    <td><a href="#">{{ request.build_absolute_uri }}{{ url.url_hash }}</a></td>
+                 </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+        
+{% endblock %}

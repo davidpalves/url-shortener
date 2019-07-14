@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+    <div class="page-header text-center">
+        <h1>Short your URL here.</h1>
+    </div>
+    <form method="post" class="text-center">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Get Shortened URL!</button>
+    </form>
+
+    {% block extrajs %}
+        <script src="{% static 'js/custom.js' %}"></script>
+    {% endblock %}
+
+{% endblock %}
