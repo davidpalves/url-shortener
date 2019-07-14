@@ -3,7 +3,6 @@ from shorten.models import Encurtador
 from shorten.forms import EncurtadorForm, SignUpForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, authenticate
 
@@ -42,6 +41,9 @@ class EncurtadorDetailView(DetailView):
 
 
 def signup(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -53,4 +55,5 @@ def signup(request):
             return redirect('home')
     else:
         form = SignUpForm()
+
     return render(request, 'registration/signup.html', {'form': form})
