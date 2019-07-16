@@ -5,6 +5,9 @@
     "repository": "https://github.com/DavidPierre21/url-shortener",
     "keywords": ["python", "django" ],
     "addons": [ "heroku-postgresql" ],
+    "scripts": {
+      "postdeploy": "python manage.py migrate"
+    },
     "env": {
       "SECRET_KEY": {
         "description": "The secret key for the Django application.",
