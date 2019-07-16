@@ -1,10 +1,11 @@
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, DetailView, DeleteView
 from shorten.models import Encurtador
 from shorten.forms import EncurtadorForm, SignUpForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, authenticate
+from django.urls import reverse_lazy
 
 
 @method_decorator(login_required, name='dispatch')
@@ -15,7 +16,10 @@ class EncurtadorListView(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = Encurtador.objects.filter(user=self.request.user)
+        queryset = Encurtador.objects.filter(
+            user=self.request.user
+            ).order_by('-id')
+
         return queryset
 
 
@@ -24,13 +28,13 @@ class EncurtadorCreateView(CreateView):
     model = Encurtador
     form_class = EncurtadorForm
     template_name = 'new_url.html'
-    success_url = 'home'
+    success_url = reverse_lazy('list_urls')
 
     def form_valid(self, form):
         url = form.save(commit=False)
         url.user = self.request.user
         url.save()
-        return redirect('home')
+        return redirect('list_urls')
 
 
 class EncurtadorDetailView(DetailView):
@@ -38,6 +42,18 @@ class EncurtadorDetailView(DetailView):
     template_name = 'redirect.html'
     context_object_name = 'url'
     lookup_field = 'slug'
+
+
+class EncurtadorDeleteView(DeleteView):
+    model = Encurtador
+    success_url = reverse_lazy('list_urls')
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        user = self.request.user
+        if self.object.user == user:
+            return self.delete(request, *args, **kwargs)
+        return redirect('url_list')
 
 
 def signup(request):
