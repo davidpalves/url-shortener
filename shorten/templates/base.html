@@ -10,7 +10,9 @@
         <meta name="description" content="A simple URL shortener made using Python with Django">
         <meta name="author" content="Antonio Victor">
 
-        <title>URL Shortener</title>
+        <title>{% block title %}URL Shortener{% endblock %}</title>
+
+        <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"/>
 
         <!-- Bootstrap core CSS -->
         <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
