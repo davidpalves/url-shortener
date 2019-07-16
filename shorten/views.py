@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, authenticate
 from django.urls import reverse_lazy
+from django.db.models import Q
 
 
 @method_decorator(login_required, name='dispatch')
@@ -20,6 +21,19 @@ class EncurtadorListView(ListView):
             user=self.request.user
             ).order_by('-id')
 
+        search_query = self.request.GET.get('search')
+
+        if search_query:
+            queryset = queryset.filter(
+                (Q(url_redirect__icontains=search_query) |
+                 Q(slug__icontains=search_query)) &
+                Q(user=self.request.user)
+                ).distinct()
+        else:
+            queryset = Encurtador.objects.filter(
+                user=self.request.user
+            ).order_by('-id')
+        return queryset
         return queryset
 
 
