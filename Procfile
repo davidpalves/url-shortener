@@ -1,2 +1,2 @@
-web: gunicorn djangoherokuapp.wsgi --log-file -
+web: gunicorn encurtador_url.wsgi --log-file -
 
